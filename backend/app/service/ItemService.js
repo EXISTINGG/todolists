@@ -13,7 +13,6 @@ class ItemService {
     if(cachedItem) {
       // 遍历数组并将每个元素解析为对象
       const objectsArray = cachedItem.map((jsonString) => JSON.parse(jsonString));
-      console.log('objectsArray',objectsArray);
       return objectsArray
     } else {
       const items = await Item.findAll({
@@ -23,7 +22,6 @@ class ItemService {
         offset: start,
         limit: end - start + 1 // 因为Sequelize的`limit`是要返回的行数，所以需要计算出要返回的行数
       })
-      console.log('items',items);
       return items
       // redis没有,建议缓存到redis
     }
@@ -35,7 +33,6 @@ class ItemService {
     if(cachedItem) {
       // 模糊查找关键词
       const objectsArray = cachedItem.map((jsonString) => JSON.parse(jsonString)).filter((item) => item.title.includes(title));
-      console.log(objectsArray);
       return objectsArray
     } else {
       const items = await Item.findAll({
@@ -46,7 +43,6 @@ class ItemService {
         },
         raw: true,
       });
-      console.log(items);
       return items
     }
   }
@@ -55,14 +51,12 @@ class ItemService {
     const cachedItem = await redis.lrange(`item:${userID}`, 0, -1)
     if(cachedItem) {
       const item = cachedItem.map((jsonString) => JSON.parse(jsonString)).filter((item) => item.id == itemId && item.userID == userID);
-      console.log('item',item[0]);
       return item[0]
     } else {
       const item = await Item.findOne({
         where: {id: itemId, userID},
         raw: true,
       });
-      console.log(item);
       return item
     }
   }

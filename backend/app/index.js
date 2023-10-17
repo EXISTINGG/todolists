@@ -12,8 +12,10 @@ import config from './config/index.js';
 
 const app = new Koa();
 app.keys = [config.session_secret]; // 用于加密会话数据的密钥
-app
-.use(cors())
+// 允许跨域请求并携带Cookie
+app.use(cors({
+  credentials: true // 允许携带凭据 (cookies, HTTP 认证等)
+}))
 .use(koaBody({
   multipart: true,
   formidable: {

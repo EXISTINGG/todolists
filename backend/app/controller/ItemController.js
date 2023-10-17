@@ -22,7 +22,6 @@ class ItemController {
   // 增加事件
   async addItem(ctx) {
     const {data, error} = await vaildate(ctx, rules)
-    // return console.log(ctx.state._id);
     if(error) {
       return response.error(ctx, error)
     }
@@ -36,7 +35,7 @@ class ItemController {
       item.dataValues.status = '0'
       await redis.lpush(`item:${data.userID}`, JSON.stringify(item.dataValues));
 
-      response.success(ctx, item.dataValues, '新增事项成功')
+      response.success(ctx, {item:item.dataValues}, '新增事项成功')
     } else {
       response.error(ctx, '新增事项失败')
     }
@@ -53,22 +52,21 @@ class ItemController {
     }
 
     const delRes = await ItemService.delItem(ctx.state._id, itemId)
-    console.log(delRes);
 
     if(delRes > 0) {
       await redis.lrem(`item:${ctx.state._id}`, 1, JSON.stringify(item))
-      return response.success(ctx, '删除事项成功')
+      return response.success(ctx, [], '删除事项成功')
 
     } else {
       response.error(ctx, '删除事项失败')
     }
   }
 
-  // 修改事件(修改title或status,不能同时进行)
+  // 修改事件(修改title或status,title优先,不能同时进行)
   async updateItem(ctx) {
     const {data, error} = await vaildate(ctx, rules)
-    const {id, title, status} = data
-    console.log(id, title, status);
+    const {id, title} = data
+    const status = String(data.status)
 
     if(!id) {
       return response.error(ctx, 'id不能为空')
@@ -103,7 +101,6 @@ class ItemController {
           }
         })
         .filter(index => index !== undefined);
-        console.log('index',index);
 
         const GetRes = await redis.lindex(`item:${ctx.state._id}`, index) 
   
@@ -116,7 +113,7 @@ class ItemController {
         // 将修改后的元素重新设置回列表中
         await redis.lset(`item:${ctx.state._id}`, index, JSON.stringify(resItem));
 
-        return response.success(ctx, '修改事项成功')
+        return response.success(ctx, [], '修改事项成功')
       } else {
         return response.error(ctx, '修改事项失败')
       } 
@@ -141,7 +138,6 @@ class ItemController {
           }
         })
         .filter(index => index !== undefined);
-        console.log('index',index);
 
         const GetRes = await redis.lindex(`item:${ctx.state._id}`, index) 
   
@@ -154,7 +150,7 @@ class ItemController {
         // 将修改后的元素重新设置回列表中
         await redis.lset(`item:${ctx.state._id}`, index, JSON.stringify(resItem));
 
-        return response.success(ctx, '修改事项成功')
+        return response.success(ctx, [], '修改事项成功')
       } else {
         return response.error(ctx, '修改事项失败')
       } 
@@ -179,26 +175,24 @@ class ItemController {
     const item =  await ItemService.findItem(ctx.state._id, data.title)
 
     if(item.length == 0) {
-      return response.error(ctx, '未找到事项')
+      return response.success(ctx, [], '未找到事项')
     }
 
-    response.success(ctx, item, '查询事项成功')
+    response.success(ctx, {items: item}, '查询事项成功')
   }
 
   // 获取事件
   async getItem(ctx) {
     const usp  =  new URLSearchParams(ctx.querystring)
 
-    const pageSize = 20 // 每页显示的项目数量
-    const page = usp.get('nextPage') || 1 // 当前页码
-
+    const pageSize = Number(usp.get('pageSize')) || 20 // 每页显示的项目数量
+    const page = Number(usp.get('nextPage')) || 1 // 当前页码
     const start = (page - 1) * pageSize; // 计算起始索引
     const end = start + pageSize - 1; // 计算结束索引
-
     const items = await ItemService.getItem(ctx.state._id, start, end)
     
     if(items.length == 0) {
-      return response.success(ctx, [], '没有事项了')
+      return response.success(ctx, {items, nextPage: 1}, '没有事项了')
     }
 
     response.success(ctx, {items, nextPage: page-0+1}, '获取事项成功')
@@ -209,11 +203,11 @@ class ItemController {
     const id = ctx.state._id
 
     try {
+      // 查看用户是否有待办
       const items = await ItemService.getAllItem(id)
 
-      console.log(items);
       if(items.length == 0) {
-        return response.error(ctx, '未找到事项')
+        return response.error(ctx, '你还没有事项')
       }
 
       // 清空 Redis 列表

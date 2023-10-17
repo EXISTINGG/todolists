@@ -33,7 +33,6 @@ async function validate(ctx, rules, dataValues) {
 }
 
 function getFormData(ctx) {
-  console.log('data',ctx.request.body);
   if (!ctx.request.body) {
     return response.error(ctx, '请求参数错误');
   }

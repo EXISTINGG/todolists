@@ -25,8 +25,8 @@ class UserService {
   }
 
   // 删除用户
-  deleteAccount(username) {
-    return User.destroy({where: {username}});
+  deleteAccount(id) {
+    return User.destroy({where: {id}});
   }
 }
 

@@ -84,6 +84,7 @@ class UserController {
     }
 
     const user = await UserService.getUserByName(data.username)
+    
 
     if(!user?.id) {
       return response.error(ctx, '用户不存在')
@@ -100,18 +101,19 @@ class UserController {
 
     const token = sign(userInfo)
 
-    response.success(ctx, {token: `Bearer ${token}`}, '登录成功')
+    response.success(ctx, {user: userInfo, token: `Bearer ${token}`}, '登录成功')
   }
 
   // 注销账号
   async deleteAccount(ctx) {
-    const id = ctx.params.id
+    // const id = ctx.params.id
+    const id = ctx.state._id
     
     // 是否是删除自己的账号
-    if(ctx.state._id != id) {
-      return response.error(ctx, '无权限')
-    }
-
+    // if(ctx.state._id != id) {
+    //   return response.error(ctx, '无权限')
+    // }
+    
     const user = await UserService.getUserById(id)
 
     if(!user?.id) {
@@ -119,7 +121,7 @@ class UserController {
     }
 
     // 验证通过,注销账号(不考虑软删除)
-    const number = await UserService.deleteAccount(user.username)
+    const number = await UserService.deleteAccount(user.id)
 
     if(number > 0) {
       // 从删除redis

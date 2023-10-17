@@ -2,7 +2,6 @@ import jwt from 'jsonwebtoken'
 import config from "../app/config/index.js";
 
 function sign(data) {
-  // console.log(jwt.sign(data, Buffer.from(config.jwt.secret, 'utf-8'), { expiresIn: config.jwt.expiresIn }));
   return jwt.sign(data, config.jwt.secret, { expiresIn: config.jwt.expiresIn })
 }
 
