@@ -109,7 +109,7 @@ const submitLoginForm = async (formEl) => {
 }
 
 // 更换验证码
-const changeCaptcha = () => captchaUrl.value = `https://todolist.hxq-001.top/captcha?time=${Date.now()}`
+const changeCaptcha = () => captchaUrl.value = `https://todolist.hxq-001.top/api/captcha?time=${Date.now()}`
 
 onMounted(() => changeCaptcha())
 </script>
