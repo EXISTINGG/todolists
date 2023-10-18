@@ -12,7 +12,7 @@ router.get('/captcha', (ctx) => {
   const options = {
     width: 90, // 设置验证码的宽度，以像素为单位
     height: 40,
-    ignoreChars: '0o1iltTj', // 过滤掉
+    ignoreChars: '0o1iltTjJWwYyUuIOPpSsJKkLZzXxCcVv', // 过滤掉
     noise: 2, //干扰线条数目
     size: 4, //验证码长度
     fontSize: 40
