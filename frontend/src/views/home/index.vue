@@ -104,8 +104,8 @@
         </div>
       </el-main>
       <!-- 页脚 -->
-      <el-footer class="absolute md:bottom-2 bottom-0 md:w-11/12 w-full">
-        <footer class="absolute bottom-0 left-2/4 -translate-x-2/4">TodoList | @Existing</footer>
+      <el-footer class="flex items-center justify-center !h-8 absolute bottom-0 md:w-11/12 w-full">
+        <footer>TodoList | @Existing</footer>
       </el-footer>
     </el-container>
   </div>
