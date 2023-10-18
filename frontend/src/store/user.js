@@ -64,6 +64,7 @@ export const useUserStore = defineStore('user', {
       this.user = {}
       removeItem('TOKEN')
       removeItem('user')
+      removeItem('item')
     }
   }
 })

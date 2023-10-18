@@ -288,6 +288,7 @@ const closeSearchItemDialog = () => {
 const logout = () => {
   removeItem('user')
   removeItem('TOKEN')
+  removeItem('item')
   router.replace('/login')
 }
 
