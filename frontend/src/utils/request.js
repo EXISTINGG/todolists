@@ -5,14 +5,16 @@ import {getItem} from './localStorage.js'
 // (有Loading效果)
 export const request = axios.create({
   // baseURL: 'http://127.0.0.1/api',
-  baseURL: 'https://todolist.hxq-001.top/api',
+  // baseURL: 'https://todolist.hxq-001.top/api',
+  baseURL: 'http://47.113.146.58:8081/api',
   // 请求超时时间
   timeout: 10000,
 })
 // (无Loading效果)
 export const requests = axios.create({
   // baseURL: 'http://127.0.0.1/api',
-  baseURL: 'https://todolist.hxq-001.top/api',
+  // baseURL: 'https://todolist.hxq-001.top/api',
+  baseURL: 'http://47.113.146.58:8081/api',
   // 请求超时时间
   timeout: 10000
 })

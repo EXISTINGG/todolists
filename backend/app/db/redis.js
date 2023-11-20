@@ -7,10 +7,10 @@ const { service_name, port, host, password } = config.redis;
 const redis = new Redis({
   host, // Redis服务器的主机名
   port, // Redis服务器的端口号
-  // password, // 如果有密码的话
-  // username: service_name,
+  password, // 如果有密码的话
+  username: service_name,
   // TLS required when externally connecting to Render Redis
-  // tls: true,
+  tls: true,
 });
 
 export default redis;
