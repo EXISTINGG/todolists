@@ -108,8 +108,7 @@ const submitregForm = async (formEl) => {
 }
 
 // 更换验证码
-// const changeCaptcha = () => captchaUrl.value = `https://todolist.hxq-001.top/api/captcha?time=${Date.now()}`
-const changeCaptcha = () => captchaUrl.value = `//47.113.146.58:8081/api/captcha?time=${Date.now()}`
+const changeCaptcha = () => captchaUrl.value = `https://todolist.hxq-001.top/api/captcha?time=${Date.now()}`
 
 onMounted(() => changeCaptcha())
 </script>
